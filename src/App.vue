@@ -66,8 +66,8 @@ let parallaxEls: HTMLElement[] = []
 const parallaxLoop = () => {
   const y = window.scrollY || 0
   for (const el of parallaxEls) {
-    const sp = parseFloat(el.dataset.parallaxSpeed || '0.2')
-    el.style.transform = `translate3d(0, ${y * sp * -0.2}px, 0)` // subtle
+    const sp = parseFloat(el.dataset.parallaxSpeed || '0.5')
+    el.style.transform = `translate3d(0, ${y * sp * -0.5}px, 0)` // subtle
   }
   rafId = requestAnimationFrame(parallaxLoop)
 }
@@ -193,8 +193,12 @@ onBeforeUnmount(() => {
 
       <!-- Content -->
       <div class="relative z-20 flex flex-col items-center justify-center min-h-screen px-4">
-        <div class="mb-40">
-          <img src="./assets/logo_v2.png" alt="Drownlight Logo" class="w-72 md:w-96 lg:w-[500px] xl:w-[600px] h-auto" />
+        <div class="mb-32 flex justify-center">
+          <img
+            src="./assets/logo_v5.png"
+            alt="Drownlight Logo"
+            class="w-full fhd:w-[80%] 2k:w-full h-auto opacity-90"
+          />
         </div>
 
         <div class="text-center mb-8 reveal">

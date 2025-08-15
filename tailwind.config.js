@@ -3,6 +3,10 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      screens: {
+        fhd: '1920px',
+        '2k': '2048px',
+      },
       colors: {
         'ocean-dark': '#001833',
         'ocean-blue': '#0A2A4A',
