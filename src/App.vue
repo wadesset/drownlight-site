@@ -440,6 +440,11 @@ onBeforeUnmount(() => {
   background-position: center; background-size: cover; background-repeat: no-repeat;
   transform: translate3d(0,0,0); will-change: transform;
 }
+@media (max-width: 640px) {
+  .bg-cover-center {
+    background-position: 35% center;
+  }
+}
 .veil-dark{
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: linear-gradient(to bottom, rgba(10,20,34,.10) 0%, rgb(0,24,52) 100%);
