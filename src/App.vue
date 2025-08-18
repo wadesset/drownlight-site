@@ -421,7 +421,7 @@ onBeforeUnmount(() => {
 .sign-up-btn {
   appearance: none; border: 0; cursor: pointer;
   padding: 14px 22px; border-radius: 999px; font-weight: 700;
-  color: white; background: var(--emerald); box-shadow: 0 0 18px rgba(25,195,138,.45);
+  color: white; background: #00851e; box-shadow: 0 0 18px rgba(25,195,138,.45);
   transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
 }
 .sign-up-btn:hover { box-shadow: 0 0 10px 5px rgba(25,195,138,.72); }
