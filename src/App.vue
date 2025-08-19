@@ -110,6 +110,41 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
   if (io) io.disconnect()
 })
+
+const emailInput = ref<HTMLInputElement | null>(null)
+
+const scrollToSignup = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+
+  const start = performance.now()
+
+  const highlight = () => {
+    const el = emailInput.value
+    if (!el) return
+    el.classList.add('pulse-highlight')
+    // не даём странице прыгать при фокусе
+    el.focus({ preventScroll: true })
+    setTimeout(() => el.classList.remove('pulse-highlight'), 3000)
+  }
+
+  const waitUntilTop = () => {
+    if (window.scrollY <= 2) {
+      highlight()
+    } else if (performance.now() - start > 800) {
+      highlight()
+    } else {
+      requestAnimationFrame(waitUntilTop)
+    }
+  }
+  requestAnimationFrame(waitUntilTop)
+}
+
+const scrollToAbout = () => {
+  const el = document.getElementById("about-section")
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" })
+  }
+}
 </script>
 
 <template>
@@ -118,7 +153,6 @@ onBeforeUnmount(() => {
     <nav class="sticky top-0 z-50 bg-nav-dark/80 backdrop-blur border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
         <div class="flex items-center">
-          <!-- можно добавить мини-лого -->
         </div>
 
         <!-- Burger (mobile) -->
@@ -209,18 +243,30 @@ onBeforeUnmount(() => {
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
             <div class="relative flex-1 w-full">
-              <form class="signup" action="#" method="post" @submit.prevent="">
+              <form ref="emailInput" class="signup" action="#" method="post" @submit.prevent="">
                 <input type="email" placeholder="Enter your email" required />
                 <button @click="() => {}" class="sign-up-btn" type="submit">SIGN-UP</button>
               </form>
             </div>
+          </div>
+
+          <div class="flex justify-center mt-6">
+            <button
+              @click="scrollToAbout"
+              class="text-white/80 hover:text-white transition-colors animate-bounce"
+              aria-label="Scroll to About the Game"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ABOUT -->
-    <section class="relative py-16 px-4 bg-ocean-dark reveal">
+    <section id="about-section" class="relative py-16 px-4 bg-ocean-dark reveal">
       <div class="relative z-10 max-w-6xl mx-auto text-center">
         <h2 class="text-white text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-sawarabi text-shadow-game mb-8">
           ABOUT THE GAME
@@ -297,7 +343,7 @@ onBeforeUnmount(() => {
           Don't miss out on this chance to elevate your adventure experience. Get notified on launch day!
         </p>
 
-        <button @click="handleNotifyKickstarter" class="px-12 py-4 rounded-full bg-white text-black font-sawarabi text-xl btn">
+        <button @click.prevent="scrollToSignup" class="px-12 py-4 rounded-full bg-white text-black font-sawarabi text-xl btn">
           NOTIFY ME!
         </button>
       </div>
@@ -471,4 +517,14 @@ nav { box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 }
 .sheet-enter-from > div:nth-child(2) { transform: translateY(-100%); }
 .sheet-leave-to   > div:nth-child(2) { transform: translateY(-100%); }
+
+@keyframes emailPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(25,195,138, 0); }
+  40%  { box-shadow: 0 0 10px 12px rgba(25,195,138, .28); }
+  80%  { box-shadow: 0 0 0 0 rgba(25,195,138, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(25,195,138, 0); }
+}
+.pulse-highlight {
+  animation: emailPulse 1s ease-in-out 3;
+}
 </style>
