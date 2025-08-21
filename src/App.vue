@@ -3,12 +3,12 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 // Assets
 import heroBg from '@/assets/hero.png'
-import s0 from '@/assets/Screenshot_0.png'
-import s1 from '@/assets/Screenshot_1.png'
-import s2 from '@/assets/Screenshot_2.png'
-import s3 from '@/assets/Screenshot_3.png'
-import s4 from '@/assets/Screenshot_4.png'
-import s5 from '@/assets/Screenshot_5.png'
+import s0 from '@/assets/s1.png'
+import s1 from '@/assets/s2.png'
+import s2 from '@/assets/s3.png'
+import s3 from '@/assets/s4.png'
+import s4 from '@/assets/s5.png'
+import s5 from '@/assets/s6.png'
 
 // State
 const email = ref('')
