@@ -74,17 +74,6 @@ const parallaxLoop = () => {
 
 // Reveal-on-scroll
 let io: IntersectionObserver | null = null
-
-// Global handlers
-const onKeyGlobal = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') {
-    if (lightboxOpen.value) closeLightbox()
-    if (menuOpen.value) closeMenu()
-  }
-  if (!lightboxOpen.value) return
-  if (e.key === 'ArrowRight') nextShot()
-  if (e.key === 'ArrowLeft') prevShot()
-}
 const onResize = () => { if (window.innerWidth >= 768) closeMenu() }
 
 onMounted(() => {
@@ -144,6 +133,71 @@ const scrollToAbout = () => {
   if (el) {
     el.scrollIntoView({ behavior: "smooth" })
   }
+}
+
+const thanksOpen = ref(false)
+const openThanks = () => {
+  thanksOpen.value = true
+  document.documentElement.classList.add('no-scroll')
+}
+const closeThanks = () => {
+  thanksOpen.value = false
+  document.documentElement.classList.remove('no-scroll')
+}
+
+const MC_ACTION =
+  'https://crytivo.us12.list-manage.com/subscribe/post?u=9a67a376226e7f3db13056c73&id=437627bdee&f_id=003a46e0f0'
+
+const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+
+const submitToMailchimp = () => {
+  const value = email.value.trim()
+  if (!isValidEmail(value)) {
+    alert('Please enter a valid email.')
+    return
+  }
+
+  // скрытая форма (без попапов)
+  const form = document.createElement('form')
+  form.action = MC_ACTION
+  form.method = 'POST'
+  form.target = 'mc-target'
+  form.style.position = 'absolute'
+  form.style.left = '-9999px'
+
+  const emailInputEl = document.createElement('input')
+  emailInputEl.type = 'email'
+  emailInputEl.name = 'EMAIL'
+  emailInputEl.value = value
+  form.appendChild(emailInputEl)
+
+  const honey = document.createElement('input')
+  honey.type = 'text'
+  honey.name = 'b_9a67a376226e7f3db13056c73_437627bdee'
+  honey.value = ''
+  form.appendChild(honey)
+
+  document.body.appendChild(form)
+  try {
+    form.submit()
+  } finally {
+    setTimeout(() => form.remove(), 600)
+  }
+
+  // UX: показываем «спасибо» сразу
+  email.value = ''
+  openThanks()
+}
+
+const onKeyGlobal = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    if (lightboxOpen.value) closeLightbox()
+    if (menuOpen.value) closeMenu()
+    if (thanksOpen.value) closeThanks()
+  }
+  if (!lightboxOpen.value) return
+  if (e.key === 'ArrowRight') nextShot()
+  if (e.key === 'ArrowLeft') prevShot()
 }
 </script>
 
@@ -243,9 +297,9 @@ const scrollToAbout = () => {
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
             <div class="relative flex-1 w-full">
-              <form ref="emailInput" class="signup" action="#" method="post" @submit.prevent="">
-                <input type="email" placeholder="Enter your email" required />
-                <button @click="() => {}" class="sign-up-btn" type="submit">SIGN-UP</button>
+              <form ref="emailInput" class="signup" action="#" method="post"  @submit.prevent="submitToMailchimp">
+                <input v-model="email" type="email" placeholder="Enter your email" required />
+                <button class="sign-up-btn" type="submit">SIGN-UP</button>
               </form>
             </div>
           </div>
@@ -388,6 +442,44 @@ const scrollToAbout = () => {
       </div>
     </footer>
 
+    <!-- THANK-YOU MODAL -->
+    <div
+      v-if="thanksOpen"
+      class="fixed inset-0 z-[70] flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      @click.self="closeThanks"
+    >
+      <!-- dim -->
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+      <!-- card -->
+      <div
+        class="relative z-10 w-full max-w-md rounded-2xl bg-[#0f1b2d] border border-white/10 p-6 text-center shadow-2xl animate-in"
+      >
+        <h3 class="text-2xl font-semibold mb-2">Thanks for subscribing!</h3>
+        <p class="text-white/80 mb-6">
+          You’re on the list. Want to support the project even more?<br />
+          Check out our Kickstarter page.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            class="px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 transition"
+            @click="closeThanks"
+          >
+            Close
+          </button>
+          <button
+            class="px-5 py-3 rounded-full bg-white text-black font-semibold hover:opacity-90 transition"
+            @click="() => { closeThanks(); handleNotifyKickstarter(); }"
+          >
+            Go to Kickstarter
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- LIGHTBOX -->
     <div
       v-if="lightboxOpen"
@@ -527,4 +619,11 @@ nav { box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 .pulse-highlight {
   animation: emailPulse 1s ease-in-out 3;
 }
+
+/* простая анимация появления карточки */
+@keyframes zoomFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.animate-in { animation: zoomFadeIn .18s ease-out both; }
 </style>
