@@ -291,9 +291,9 @@ const onKeyGlobal = (e: KeyboardEvent) => {
 
         <div class="text-center mb-8 reveal">
           <h2 class="text-white text-2xl md:text-3xl lg:text-4xl font-sawarabi text-shadow-game mb-4">SIGN-UP TO PLAY THE GAME FIRST</h2>
-          <p class="text-white text-lg md:text-xl font-sawarabi text-shadow-game mb-8 max-w-md mx-auto">
+<!--          <p class="text-white text-lg md:text-xl font-sawarabi text-shadow-game mb-8 max-w-md mx-auto">
             Sign up for upcoming closed tests, game updates, and exclusive perks.
-          </p>
+          </p>-->
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto">
             <div class="relative flex-1 w-full">
@@ -302,16 +302,38 @@ const onKeyGlobal = (e: KeyboardEvent) => {
                 <button class="sign-up-btn" type="submit">SIGN-UP</button>
               </form>
             </div>
+<!--            <button
+              type="button"
+              @click="handleWishlist"
+              class="sign-up-btn shrink-0"
+              aria-label="Add to Wishlist on Steam"
+            >
+              ADD TO WISHLIST
+            </button>-->
           </div>
 
-          <div class="mt-8 text-center">
+          <div class="mt-8 flex justify-center">
             <button
               @click="handleNotifyKickstarter"
-              class="kickstarter-btn px-8 py-3 rounded-full font-sawarabi text-lg md:text-xl"
+              class="mx-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-sawarabi btn"
+              style="
+      background-color: #fd7100;
+      color: white;
+      font-weight: 600;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      height: 80px;
+    "
             >
-              LAUNCHING SOON ON KICKSTARTER<br />
-              <span class="text-sm md:text-base font-normal tracking-wide">FOLLOW TO PLAY FIRST</span>
+              <img src="./assets/k.avif" alt="Kickstarter" class="h-7 align-middle" />
+              <span>FOLLOW ON KICKSTARTER</span>
             </button>
+          </div>
+
+
+          <div class="mt-8 text-center">
+            <p>Be amongst the first to play the game and score some in-game exclusive perks and rewards.</p>
+            <p>Follow us on Kickstarter which is launching soon.</p>
           </div>
 
 
@@ -638,19 +660,55 @@ nav { box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 }
 .animate-in { animation: zoomFadeIn .18s ease-out both; }
 
-.kickstarter-btn {
-  background: rgba(25, 45, 70, 0.75);
-  color: #e0f7f4;
-  border: 1px solid rgba(90, 200, 190, 0.35);
-  box-shadow: 0 0 10px rgba(40, 180, 160, 0.15);
-  transition: all 0.25s ease;
+/* общая «компактность» */
+.btn-compact {
+  padding: 10px 16px;          /* было 12–16+ */
+  font-size: 14px;             /* меньше шрифт */
+}
+@media (min-width: 768px) {
+  .btn-compact { font-size: 15px; padding: 12px 18px; }
 }
 
-.kickstarter-btn:hover {
-  background: rgba(30, 60, 90, 0.9);
+/* Steam Wishlist (под палитру) */
+.wishlist-btn {
+  background: #0a8a5e;
   color: #fff;
-  box-shadow: 0 0 18px rgba(90, 200, 190, 0.45);
-  transform: translateY(-2px);
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 0 18px rgba(25,195,138,.45);
+  transition: transform .2s ease, box-shadow .25s ease, background .2s ease, filter .2s ease;
 }
+.wishlist-btn:hover {
+  background: #10a874;
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px rgba(25,195,138,.45), 0 10px 24px rgba(0,0,0,.35);
+}
+
+/* Kickstarter — компактнее и оранжевый, но не «кричит» */
+.kickstarter-btn {
+  background: #ff9600;               /* твой оранжевый */
+  color: #0b1524;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 0 18px rgba(25,195,138,.45);
+  transition: transform .2s ease, box-shadow .25s ease, background .2s ease, filter .2s ease;
+  line-height: 1.1;
+  text-align: center;
+  max-width: 420px;                  /* чтобы визуально не растягивалась */
+}
+.kickstarter-btn:hover {
+  background: #ffab33;               /* лёгкое осветление на ховере */
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px rgba(25,195,138,.45), 0 10px 24px rgba(0,0,0,.35);
+}
+
+/* маленькая подпись во 2-й строке */
+.kickstarter-btn .kick-sub {
+  display: block;
+  font-size: 11px;
+  letter-spacing: .08em;
+  margin-top: 2px;
+  opacity: .95;
+}
+
+
 
 </style>
