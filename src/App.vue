@@ -281,7 +281,7 @@ const onKeyGlobal = (e: KeyboardEvent) => {
 
       <!-- Content -->
       <div class="relative z-20 flex flex-col items-center justify-center min-h-screen px-4">
-        <div class="mb-32 flex justify-center">
+        <div class="mb-20 flex justify-center">
           <img
             src="./assets/logo_v5.png"
             alt="Drownlight Logo"
@@ -303,6 +303,17 @@ const onKeyGlobal = (e: KeyboardEvent) => {
               </form>
             </div>
           </div>
+
+          <div class="mt-8 text-center">
+            <button
+              @click="handleNotifyKickstarter"
+              class="kickstarter-btn px-8 py-3 rounded-full font-sawarabi text-lg md:text-xl"
+            >
+              LAUNCHING SOON ON KICKSTARTER<br />
+              <span class="text-sm md:text-base font-normal tracking-wide">FOLLOW TO PLAY FIRST</span>
+            </button>
+          </div>
+
 
           <div class="flex justify-center mt-6">
             <button
@@ -626,4 +637,20 @@ nav { box-shadow: 0 6px 20px rgba(0,0,0,.25); }
   to   { opacity: 1; transform: scale(1); }
 }
 .animate-in { animation: zoomFadeIn .18s ease-out both; }
+
+.kickstarter-btn {
+  background: rgba(25, 45, 70, 0.75);
+  color: #e0f7f4;
+  border: 1px solid rgba(90, 200, 190, 0.35);
+  box-shadow: 0 0 10px rgba(40, 180, 160, 0.15);
+  transition: all 0.25s ease;
+}
+
+.kickstarter-btn:hover {
+  background: rgba(30, 60, 90, 0.9);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(90, 200, 190, 0.45);
+  transform: translateY(-2px);
+}
+
 </style>
