@@ -115,7 +115,6 @@ const scrollToSignup = () => {
     const el = emailInput.value
     if (!el) return
     el.classList.add('pulse-highlight')
-    // не даём странице прыгать при фокусе
     el.focus({ preventScroll: true })
     setTimeout(() => el.classList.remove('pulse-highlight'), 3000)
   }
@@ -163,7 +162,6 @@ const submitToMailchimp = () => {
     return
   }
 
-  // скрытая форма (без попапов)
   const form = document.createElement('form')
   form.action = MC_ACTION
   form.method = 'POST'
@@ -196,13 +194,12 @@ const submitToMailchimp = () => {
     setTimeout(() => form.remove(), 600)
   }
 
-  // UX: показываем «спасибо» сразу
   email.value = ''
   openThanks()
 
   setTimeout(() => {
     handleNotifyKickstarter();
-  }, 500)
+  }, 5000)
 }
 
 const onKeyGlobal = (e: KeyboardEvent) => {
@@ -249,20 +246,14 @@ const onKeyGlobal = (e: KeyboardEvent) => {
         </div>
       </div>
 
-      <!-- Мобильное меню-оверлей -->
       <transition name="sheet">
         <div v-if="menuOpen" class="fixed inset-0 z-[60] md:hidden text-white" aria-modal="true" role="dialog">
-          <!-- полупрозрачный фон -->
           <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeMenu"></div>
-
-          <!-- «шторка» сверху -->
           <div class="absolute top-0 inset-x-0 bg-nav-dark/95 border-b border-white/10">
-            <!-- хедер шторки с крестиком -->
             <div class="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
               <span class="text-sm text-white/80"></span>
               <button class="p-2 -mr-2 rounded hover:bg-white/10 focus:outline-none" @click="closeMenu"
                 aria-label="Close menu">
-                <!-- иконка «X» -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -270,7 +261,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
               </button>
             </div>
 
-            <!-- ссылки -->
             <div class="max-w-6xl mx-auto px-4 pt-2 pb-4 flex flex-col space-y-3 text-base">
               <a href="https://store.steampowered.com/app/3512480/Drownlight/" target="_blank"
                 class="hover:text-gray-300 transition-colors font-light">STEAM PAGE</a>
@@ -467,7 +457,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
     <footer class="bg-[#1E2227] py-6 text-center text-gray-500 backdrop-blur border-t border-white/10">
       <div class="max-w-6xl mx-auto px-4 flex flex-col items-center space-y-4">
         <div class="flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
-          <!-- Лого + надпись -->
           <a href="https://crytivo.com" target="_blank" rel="noopener noreferrer" class="cursor-pointer">
             <div class="relative inline-block">
               <span class="absolute uppercase text-xs font-light text-white left-1/2 -translate-x-1/2 -top-0">PUBLISHED
@@ -476,7 +465,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
             </div>
           </a>
 
-          <!-- Соцсети -->
           <div class="flex space-x-4">
             <a href="https://www.facebook.com/Crytivo/" target="_blank" rel="noopener noreferrer"
               class="hover:opacity-80 transition-opacity cursor-pointer">
@@ -519,21 +507,26 @@ const onKeyGlobal = (e: KeyboardEvent) => {
 
       <!-- card -->
       <div
-        class="relative z-10 w-full max-w-md rounded-2xl bg-[#0f1b2d] border border-white/10 p-6 text-center shadow-2xl animate-in">
-        <h3 class="text-2xl font-semibold mb-2">Thanks for subscribing!</h3>
+        class="relative z-10 w-full max-w-3xl rounded-2xl bg-[#0f1b2d] border border-white/10 p-6 text-center shadow-2xl animate-in">
+        <h3 class="text-4xl mb-2" style="font-family: 'Sawarabi';">Thanks for subscribing!</h3>
+        <div class="max-w-full mb-4">
+          <img class="h-auto mx-auto" src="./assets/divider.png" alt="" decoding="async" />
+        </div>
         <p class="text-white/80 mb-6">
-          You’re on the list. Want to support the project even more?<br />
-          Check out our Kickstarter page.
+          You’re almost set. In just a moment, you’ll receive an email with a confirmation link. <br> 
+          Please click the link in that email to verify your address and complete your subscription. <br>
+          Once confirmed, you’ll be fully on board and ready to receive updates. <br>
+          If you don’t see the email within a minute or two, be sure to check your spam or junk folder.
         </p>
 
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
           <button class="px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 transition" @click="closeThanks">
             Close
           </button>
-          <button class="px-5 py-3 rounded-full bg-white text-black font-semibold hover:opacity-90 transition"
+          <!-- <button class="px-5 py-3 rounded-full bg-white text-black font-semibold hover:opacity-90 transition"
             @click="() => { closeThanks(); handleNotifyKickstarter(); }">
             Go to Kickstarter
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -575,12 +568,10 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   --emerald: #005417;
 }
 
-/* Utility */
 .no-scroll {
   overflow: hidden;
 }
 
-/* Scrollbar (webkit) */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -598,7 +589,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   background: #5BA3B8;
 }
 
-/* Signup */
 .signup {
   display: inline-flex;
   gap: 10px;
@@ -638,7 +628,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   box-shadow: 0 0 10px 5px rgba(25, 195, 138, .72);
 }
 
-/* Buttons generic glow */
 .btn {
   box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.32);
   transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
@@ -648,7 +637,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.72);
 }
 
-/* Hero / BG layers */
 .hero {
   position: relative;
   min-height: 100svh;
@@ -680,7 +668,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   background: linear-gradient(to bottom, rgba(10, 20, 34, .10) 0%, rgb(0, 24, 52) 100%);
 }
 
-/* Reveal on scroll */
 .reveal {
   opacity: 0;
   transform: translateY(14px);
@@ -700,7 +687,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   }
 }
 
-/* Small fade animation for mobile menu */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .2s ease;
@@ -711,12 +697,10 @@ const onKeyGlobal = (e: KeyboardEvent) => {
   opacity: 0;
 }
 
-/* Nav drop shadow */
 nav {
   box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
 }
 
-/* движение панели */
 .sheet-enter-active>div:nth-child(2),
 .sheet-leave-active>div:nth-child(2) {
   transition: transform .24s ease;
@@ -752,7 +736,6 @@ nav {
   animation: emailPulse 1s ease-in-out 3;
 }
 
-/* простая анимация появления карточки */
 @keyframes zoomFadeIn {
   from {
     opacity: 0;
@@ -769,12 +752,9 @@ nav {
   animation: zoomFadeIn .18s ease-out both;
 }
 
-/* общая «компактность» */
 .btn-compact {
   padding: 10px 16px;
-  /* было 12–16+ */
   font-size: 14px;
-  /* меньше шрифт */
 }
 
 @media (min-width: 768px) {
@@ -784,7 +764,6 @@ nav {
   }
 }
 
-/* Steam Wishlist (под палитру) */
 .wishlist-btn {
   background: #0a8a5e;
   color: #fff;
@@ -799,10 +778,8 @@ nav {
   box-shadow: 0 0 14px rgba(25, 195, 138, .45), 0 10px 24px rgba(0, 0, 0, .35);
 }
 
-/* Kickstarter — компактнее и оранжевый, но не «кричит» */
 .kickstarter-btn {
   background: #ff9600;
-  /* твой оранжевый */
   color: #0b1524;
   border: 1px solid rgba(255, 255, 255, .18);
   box-shadow: 0 0 18px rgba(25, 195, 138, .45);
@@ -810,17 +787,14 @@ nav {
   line-height: 1.1;
   text-align: center;
   max-width: 420px;
-  /* чтобы визуально не растягивалась */
 }
 
 .kickstarter-btn:hover {
   background: #ffab33;
-  /* лёгкое осветление на ховере */
   transform: translateY(-2px);
   box-shadow: 0 0 14px rgba(25, 195, 138, .45), 0 10px 24px rgba(0, 0, 0, .35);
 }
 
-/* маленькая подпись во 2-й строке */
 .kickstarter-btn .kick-sub {
   display: block;
   font-size: 11px;
@@ -850,7 +824,6 @@ nav {
   letter-spacing: 0.15em;
 }
 
-/* общий стиль уголков */
 .corner {
   position: absolute;
   width: 28px;
@@ -858,27 +831,23 @@ nav {
   pointer-events: none;
 }
 
-/* правый верхний — оригинал */
 .corner-tr {
   top: 4px;
   right: 4px;
 }
 
-/* левый верхний */
 .corner-tl {
   top: 4px;
   left: 4px;
   transform: rotate(270deg);
 }
 
-/* левый нижний */
 .corner-bl {
   bottom: 4px;
   left: 4px;
   transform: rotate(180deg);
 }
 
-/* правый нижний */
 .corner-br {
   bottom: 4px;
   right: 4px;
