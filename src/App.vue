@@ -196,10 +196,9 @@ const submitToMailchimp = () => {
 
   email.value = ''
   openThanks()
-
   setTimeout(() => {
     handleNotifyKickstarter();
-  }, 5000)
+  }, 2000)
 }
 
 const onKeyGlobal = (e: KeyboardEvent) => {
