@@ -13,6 +13,13 @@ import s5 from '@/assets/s6.png'
 // State
 const email = ref('')
 
+const trackMetaEvent = (eventName: string, params?: Record<string, unknown>) => {
+  if (typeof window === 'undefined') return
+  if (typeof (window as any).fbq !== 'function') return
+
+  ;(window as any).fbq('trackCustom', eventName, params || {})
+}
+
 // External links
 const handleJoinDiscord = () => {
   window.open('https://discord.com/invite/c7wkbd47CQ', '_blank', 'noopener,noreferrer')
@@ -20,12 +27,15 @@ const handleJoinDiscord = () => {
 const handleWishlist = () => {
   window.open('https://store.steampowered.com/app/3512480/Drownlight/', '_blank', 'noopener,noreferrer')
 }
-const handleNotifyKickstarter = () => {
-  window.open('https://www.kickstarter.com/projects/crytivogames/drownlight', '_blank', 'noopener,noreferrer')
 
-  const handlePrivacyPolicy = () => {
-    window.open('https://crytivo.com/privacy-policy/', '_blank', 'noopener,noreferrer')
-  }
+const handleNotifyKickstarter = () => {
+   trackMetaEvent('KickstarterFollowClick', { source: 'landing_page' })
+  window.open('https://www.kickstarter.com/projects/crytivogames/drownlight', '_blank', 'noopener,noreferrer')
+}
+
+const openKickstarterAfterSignup = () => {
+  trackMetaEvent('KickstarterAutoRedirect', { source: 'signup_flow' })
+  window.open('https://www.kickstarter.com/projects/crytivogames/drownlight', '_blank', 'noopener,noreferrer')
 }
 
 // Menu (mobile)
@@ -162,6 +172,8 @@ const submitToMailchimp = () => {
     return
   }
 
+trackMetaEvent('SignupSubmit', { source: 'landing_page' })
+
   const form = document.createElement('form')
   form.action = MC_ACTION
   form.method = 'POST'
@@ -197,7 +209,7 @@ const submitToMailchimp = () => {
   email.value = ''
   openThanks()
   setTimeout(() => {
-    handleNotifyKickstarter();
+    openKickstarterAfterSignup();
   }, 2000)
 }
 
