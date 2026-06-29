@@ -10,8 +10,47 @@ import s3 from '@/assets/s4.png'
 import s4 from '@/assets/s5.png'
 import s5 from '@/assets/s6.png'
 
+// Character portraits
+import charMorty from '@/assets/images/morty.png'
+import charLily from '@/assets/images/lily.png'
+import charRon from '@/assets/images/ron.png'
+import charJoe from '@/assets/images/joe.png'
+import charOliver from '@/assets/images/oliver.png'
+import charGhost from '@/assets/images/ghost.png'
+
 // State
 const email = ref('')
+
+// Survivors
+interface Character {
+  name: string
+  role: string
+  img: string
+  quote: string
+  mystery?: boolean
+  stylized?: boolean
+}
+const characters = ref<Character[]>([
+  { name: 'Morty', role: 'Your First Mate', img: charMorty, quote: 'Sir, do you trust me?' },
+  {
+    name: 'Ron',
+    role: 'Engineer',
+    img: charRon,
+    quote:
+      'The lighthouse turned out to be a complex machine. This tower descends deep below the water — and down there, it\'s pitch black.',
+  },
+  { name: 'Joe', role: 'Fisherman', img: charJoe, quote: 'The fish seem to go mad every time we light the beacon.' },
+  { name: 'Oliver', role: 'Priest', img: charOliver, quote: 'How strong is your faith, Keeper?' },
+  {
+    name: 'Lily',
+    role: 'Keeper of the People',
+    img: charLily,
+    quote:
+      'Thirty of us made it to the lighthouse. I counted everyone again — and there are thirty-one. Someone doesn\'t belong.',
+    stylized: true,
+  },
+  { name: 'Ghost', role: 'Echoes of the Great War', img: charGhost, quote: '. . .', mystery: true },
+])
 
 const trackMetaEvent = (eventName: string, params?: Record<string, unknown>) => {
   if (typeof window === 'undefined') return
@@ -295,19 +334,24 @@ const onKeyGlobal = (e: KeyboardEvent) => {
       <div class="relative z-20 flex flex-col items-center justify-center min-h-screen px-4">
         <div class="flex justify-center">
           <img src="./assets/logo_v5.png" alt="Drownlight Logo"
-            class="w-full fhd:w-[80%] 2k:w-full h-auto opacity-90" />
+            class="w-full max-w-3xl h-auto opacity-90" />
         </div>
 
-        <div class="mb-10 flex justify-center reveal">
-          <div style="font-family: 'Sawarabi';" class="launch-badge">
-            <img src="./assets/corner.png" class="corner corner-tl" />
-            <img src="./assets/corner.png" class="corner corner-tr" />
-            <img src="./assets/corner.png" class="corner corner-bl" />
-            <img src="./assets/corner.png" class="corner corner-br" />
+        <div class="mb-8 flex flex-col lg:flex-row justify-center items-center gap-4 reveal w-full">
+          <iframe
+            src="https://store.steampowered.com/widget/3512480/"
+            title="Drownlight on Steam"
+            class="w-full max-w-[646px] h-[190px] rounded-lg overflow-hidden"
+            frameborder="0"></iframe>
 
-            KICKSTARTER LAUNCHES<br />
-            <span><a style="color: #05ce78;">24</a> MARCH</span>
-          </div>
+          <a href="https://www.kickstarter.com/projects/crytivogames/drownlight" target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col items-center justify-center gap-2 h-[190px] w-full max-w-[646px] lg:w-[260px] shrink-0 rounded-lg bg-[#0f1b2d] border border-[#fd7100]/60 px-6 text-center transition hover:border-[#fd7100] hover:shadow-[0_0_18px_rgba(253,113,0,0.45)]">
+            <img src="./assets/k.avif" alt="Kickstarter" class="h-8" />
+            <span class="text-[#05ce78] text-xs font-semibold uppercase tracking-widest">Successfully Funded</span>
+            <span class="text-white font-sawarabi text-xl leading-tight">Funded on Kickstarter</span>
+            <span class="text-white/70 text-sm group-hover:text-white transition-colors">View the campaign →</span>
+          </a>
         </div>
 
         <div class="text-center mb-8 reveal">
@@ -339,29 +383,6 @@ const onKeyGlobal = (e: KeyboardEvent) => {
             You can unsubscribe at any time.
           </p>
 
-          <div class="mt-8 flex justify-center">
-            <button @click="handleNotifyKickstarter"
-              class="mx-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-sawarabi btn"
-              style="
-      background-color: #fd7100;
-      color: white;
-      font-weight: 600;
-      font-size: 1.5rem;
-      letter-spacing: 0.05em;
-      height: 80px;
-    ">
-              <img src="./assets/k.avif" alt="Kickstarter" class="h-7 align-middle" />
-              <span>FOLLOW ON KICKSTARTER</span>
-            </button>
-          </div>
-
-
-          <div class="mt-8 text-center">
-            <p>Be amongst the first to play the game and score some in-game exclusive perks and rewards.</p>
-            <p>Follow us on Kickstarter which is launching soon.</p>
-          </div>
-
-
           <div class="flex justify-center mt-6">
             <button @click="scrollToAbout" class="text-white/80 hover:text-white transition-colors animate-bounce"
               aria-label="Scroll to About the Game">
@@ -372,6 +393,31 @@ const onKeyGlobal = (e: KeyboardEvent) => {
             </button>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- KICKSTARTER FUNDED -->
+    <section class="relative py-12 px-4 bg-ocean-blue border-y border-white/10 reveal">
+      <div
+        class="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
+        <div class="max-w-xl">
+          <span class="inline-block text-[#05ce78] text-sm font-semibold uppercase tracking-[0.2em] mb-3">
+            Successfully Funded
+          </span>
+          <h2 class="text-white text-3xl md:text-4xl lg:text-5xl font-sawarabi text-shadow-game mb-4 leading-tight">
+            FULLY FUNDED ON KICKSTARTER
+          </h2>
+          <p class="text-white/85 text-base md:text-lg leading-relaxed">
+            Thanks to our incredible backers, Drownlight reached its goal on Kickstarter.
+            The lighthouse will shine — and you helped make it happen.
+          </p>
+        </div>
+
+        <iframe
+          src="https://www.kickstarter.com/projects/crytivogames/drownlight/widget/card.html?v=2"
+          title="Drownlight on Kickstarter"
+          class="w-[220px] h-[420px] shrink-0 rounded-lg overflow-hidden bg-white"
+          frameborder="0" scrolling="no"></iframe>
       </div>
     </section>
 
@@ -406,6 +452,39 @@ const onKeyGlobal = (e: KeyboardEvent) => {
       </div>
     </section>
 
+    <!-- CHARACTERS -->
+    <section class="relative py-16 px-4 bg-ocean-dark reveal">
+      <div class="relative z-10 max-w-6xl mx-auto text-center">
+        <h2 class="text-white text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-sawarabi text-shadow-game mb-8">
+          MEET THE SURVIVORS
+        </h2>
+        <div class="max-w-full mb-8">
+          <img class="h-auto mx-auto" src="./assets/divider.png" alt="" decoding="async" />
+        </div>
+
+        <p class="text-white text-lg md:text-xl lg:text-2xl font-sawarabi mb-12 max-w-4xl mx-auto leading-relaxed">
+          Thirty souls washed ashore at the lighthouse, each carrying their own secrets, doubts, and
+          quiet fears. Get to know the people whose fate rests in your hands.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <figure v-for="char in characters" :key="char.name"
+            class="character-card relative overflow-hidden rounded-xl border border-white/10 bg-nav-dark/40"
+            :class="{ 'character-card--mystery': char.mystery, 'character-card--stylized': char.stylized }">
+            <img :src="char.img" :alt="char.name"
+              class="w-full h-96 md:h-[30rem] object-cover object-top transition-transform duration-300"
+              loading="lazy" decoding="async" />
+            <div class="character-veil"></div>
+            <figcaption class="absolute inset-x-0 bottom-0 p-5 text-left">
+              <h3 class="text-white text-2xl font-sawarabi text-shadow-game leading-none">{{ char.name }}</h3>
+              <p class="text-[#38bdf8] text-sm font-semibold uppercase tracking-wider mb-2">{{ char.role }}</p>
+              <p class="text-white/85 text-base md:text-lg leading-snug italic">“{{ char.quote }}”</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- DISCORD -->
     <section class="relative min-h-[90svh] bg-ocean-dark py-16 px-4 flex items-center justify-center reveal">
       <!-- BG image with top/bottom fades -->
@@ -434,33 +513,75 @@ const onKeyGlobal = (e: KeyboardEvent) => {
           Join us today and become part of Drownlight!
         </p>
 
-        <button @click="handleJoinDiscord"
-          class="px-12 py-4 rounded-full bg-white text-black font-sawarabi text-xl btn">
-          JOIN NOW
-        </button>
+        <div class="mx-auto max-w-md rounded-2xl bg-ocean-blue border border-white/80 p-5 shadow-2xl text-left">
+          <div class="flex items-center gap-4">
+            <img
+              src="https://cdn.discordapp.com/icons/1337011103107911722/ad96a7b2b38c1b79da547675d8031d8d.png?size=128"
+              alt="Drownlight Discord" class="h-14 w-14 rounded-2xl shrink-0 bg-white/10" />
+            <div class="min-w-0">
+              <p class="text-white/70 text-xs font-semibold uppercase tracking-widest">Official Server</p>
+              <p class="text-white text-xl font-bold truncate">Drownlight</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-5 mt-4 text-sm text-white/90">
+            <span class="flex items-center gap-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-[#23a55a]"></span>235 Online
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-white/40"></span>1,408 Members
+            </span>
+          </div>
+
+          <button @click="handleJoinDiscord"
+            class="mt-5 w-full py-3 rounded-lg bg-[#5865F2] text-white font-bold text-lg hover:bg-[#4752c4] transition">
+            Join Server
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- KICKSTARTER -->
+    <!-- SOCIALS -->
     <section class="relative py-16 px-4 bg-ocean-dark reveal">
       <div class="relative z-10 max-w-6xl mx-auto text-center">
-        <h2
-          class="text-white text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-sawarabi text-shadow-game mb-8 leading-tight">
-          KICKSTARTER<br>LAUNCHING SOON
+        <h2 class="text-white text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-sawarabi text-shadow-game mb-8">
+          FOLLOW DROWNLIGHT
         </h2>
         <div class="max-w-full mb-8">
           <img class="h-auto mx-auto" src="./assets/divider.png" alt="" decoding="async" />
         </div>
         <p class="text-white text-lg md:text-xl lg:text-2xl font-sawarabi mb-12 max-w-4xl mx-auto leading-relaxed">
-          The Drownlight Kickstarter is launching soon! Join us in forging the game into something even more epic and
-          receive exclusive rewards.
-          Don't miss out on this chance to elevate your adventure experience. Get notified on launch day!
+          Stay up to date on news, devlogs, and behind-the-scenes straight from the lighthouse.
         </p>
 
-        <button @click.prevent="scrollToSignup"
-          class="px-12 py-4 rounded-full bg-white text-black font-sawarabi text-xl btn">
-          NOTIFY ME!
-        </button>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <a href="https://www.reddit.com/r/drownlight/" target="_blank" rel="noopener noreferrer"
+            class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-ocean-blue border border-white/15 p-8 transition hover:-translate-y-1 hover:border-white/40">
+            <svg class="h-10 w-10 text-[#FF4500]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M24 11.779c0-1.459-1.192-2.645-2.657-2.645-.715 0-1.363.286-1.84.746-1.81-1.191-4.259-1.949-6.971-2.046l1.483-4.669 4.016.941-.006.058c0 1.193.975 2.163 2.174 2.163 1.198 0 2.172-.97 2.172-2.163s-.975-2.164-2.172-2.164c-.92 0-1.704.574-2.021 1.379l-4.329-1.015c-.189-.046-.381.063-.44.249l-1.654 5.207c-2.838.034-5.409.798-7.3 2.025-.474-.438-1.103-.712-1.799-.712-1.465 0-2.656 1.187-2.656 2.646 0 .97.533 1.811 1.317 2.271-.052.282-.086.567-.086.857 0 3.911 4.55 7.443 10.118 7.443 5.567 0 10.118-3.532 10.118-7.443 0-.288-.033-.571-.084-.852.789-.46 1.325-1.301 1.325-2.275zm-17.616 2.434c0-.749.61-1.359 1.359-1.359.749 0 1.359.61 1.359 1.359 0 .749-.61 1.359-1.359 1.359-.749 0-1.359-.61-1.359-1.359zm7.027 4.04c-.685.685-2.064.74-2.465.74-.402 0-1.781-.055-2.465-.74-.102-.102-.102-.268 0-.371.103-.102.269-.102.371 0 .431.431 1.357.583 2.094.583.736 0 1.663-.152 2.093-.583.103-.102.269-.102.372 0 .102.103.102.269 0 .371zm-.207-2.681c-.749 0-1.359-.61-1.359-1.359 0-.749.61-1.359 1.359-1.359.749 0 1.359.61 1.359 1.359 0 .749-.61 1.359-1.359 1.359z" />
+            </svg>
+            <span class="text-white font-bold text-lg">Reddit</span>
+            <span class="text-white/60 text-sm group-hover:text-white/90 transition-colors">r/drownlight</span>
+          </a>
+
+          <a href="https://www.youtube.com/@Drownlight" target="_blank" rel="noopener noreferrer"
+            class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-ocean-blue border border-white/15 p-8 transition hover:-translate-y-1 hover:border-white/40">
+            <svg class="h-10 w-10 text-[#FF0000]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+            </svg>
+            <span class="text-white font-bold text-lg">YouTube</span>
+            <span class="text-white/60 text-sm group-hover:text-white/90 transition-colors">@Drownlight</span>
+          </a>
+
+          <a href="https://x.com/DrownlightGame" target="_blank" rel="noopener noreferrer"
+            class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-ocean-blue border border-white/15 p-8 transition hover:-translate-y-1 hover:border-white/40">
+            <svg class="h-9 w-9 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            <span class="text-white font-bold text-lg">X</span>
+            <span class="text-white/60 text-sm group-hover:text-white/90 transition-colors">@DrownlightGame</span>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -524,7 +645,7 @@ const onKeyGlobal = (e: KeyboardEvent) => {
           <img class="h-auto mx-auto" src="./assets/divider.png" alt="" decoding="async" />
         </div>
         <p class="text-white/80 mb-6">
-          You’re almost set. In just a moment, you’ll receive an email with a confirmation link. <br> 
+          You’re almost set. In just a moment, you’ll receive an email with a confirmation link. <br>
           Please click the link in that email to verify your address and complete your subscription. <br>
           Once confirmed, you’ll be fully on board and ready to receive updates. <br>
           If you don’t see the email within a minute or two, be sure to check your spam or junk folder.
@@ -812,6 +933,45 @@ nav {
   letter-spacing: .08em;
   margin-top: 2px;
   opacity: .95;
+}
+
+.character-card {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.character-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .5), 0 0 18px rgba(25, 195, 138, .25);
+}
+
+.character-card:hover img {
+  transform: scale(1.04);
+}
+
+.character-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(11, 19, 32, 0) 35%, rgba(11, 19, 32, .55) 65%, rgba(11, 19, 32, .96) 100%);
+}
+
+.character-card--mystery img {
+  filter: grayscale(.35) brightness(.8) contrast(1.05);
+}
+
+/* Lily's art is more stylized — scale it down so she reads as set further back */
+.character-card--stylized img {
+  transform: translateY(50px) scale(.9);
+  transform-origin: center center;
+}
+
+.character-card--stylized:hover img {
+  transform: translateY(50px) scale(.94);
+}
+
+.character-card--mystery:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .5), 0 0 22px rgba(120, 0, 40, .4);
 }
 
 .launch-badge {
