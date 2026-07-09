@@ -52,6 +52,36 @@ const characters = ref<Character[]>([
   { name: 'Ghost', role: 'Echoes of the Great War', img: charGhost, quote: '. . .', mystery: true },
 ])
 
+// Live Discord stats (invite API supports CORS, returns both counts)
+const discordOnline = ref(320)
+const discordMembers = ref(1440)
+const fetchDiscordStats = async () => {
+  try {
+    const res = await fetch('https://discord.com/api/v9/invites/c7wkbd47CQ?with_counts=true')
+    if (!res.ok) return
+    const data = await res.json()
+    if (typeof data.approximate_presence_count === 'number') discordOnline.value = data.approximate_presence_count
+    if (typeof data.approximate_member_count === 'number') discordMembers.value = data.approximate_member_count
+  } catch {
+    /* keep fallback values */
+  }
+}
+
+// Cursor-based parallax tilt for character cards
+const onCardMove = (e: MouseEvent) => {
+  const el = e.currentTarget as HTMLElement
+  const r = el.getBoundingClientRect()
+  const px = (e.clientX - r.left) / r.width - 0.5  // -0.5 .. 0.5
+  const py = (e.clientY - r.top) / r.height - 0.5
+  el.style.setProperty('--px', px.toFixed(3))
+  el.style.setProperty('--py', py.toFixed(3))
+}
+const onCardLeave = (e: MouseEvent) => {
+  const el = e.currentTarget as HTMLElement
+  el.style.setProperty('--px', '0')
+  el.style.setProperty('--py', '0')
+}
+
 const trackMetaEvent = (eventName: string, params?: Record<string, unknown>) => {
   if (typeof window === 'undefined') return
   if (typeof (window as any).fbq !== 'function') return
@@ -144,6 +174,9 @@ onMounted(() => {
   // global listeners
   window.addEventListener('keydown', onKeyGlobal)
   window.addEventListener('resize', onResize)
+
+  // live Discord counts
+  fetchDiscordStats()
 })
 
 onBeforeUnmount(() => {
@@ -398,9 +431,8 @@ const onKeyGlobal = (e: KeyboardEvent) => {
 
     <!-- KICKSTARTER FUNDED -->
     <section class="relative py-12 px-4 bg-ocean-blue border-y border-white/10 reveal">
-      <div
-        class="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
-        <div class="max-w-xl">
+      <div class="relative z-10 max-w-6xl mx-auto text-center">
+        <div class="max-w-2xl mx-auto mb-10">
           <span class="inline-block text-[#05ce78] text-sm font-semibold uppercase tracking-[0.2em] mb-3">
             Successfully Funded
           </span>
@@ -413,11 +445,29 @@ const onKeyGlobal = (e: KeyboardEvent) => {
           </p>
         </div>
 
-        <iframe
-          src="https://www.kickstarter.com/projects/crytivogames/drownlight/widget/card.html?v=2"
-          title="Drownlight on Kickstarter"
-          class="w-[220px] h-[420px] shrink-0 rounded-lg overflow-hidden bg-white"
-          frameborder="0" scrolling="no"></iframe>
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+          <div
+            class="w-full max-w-2xl lg:max-w-none lg:w-auto lg:h-[420px] aspect-video shrink-0 rounded-lg overflow-hidden shadow-2xl bg-black">
+            <iframe
+              src="https://www.youtube.com/embed/g7PbwtkjjqI"
+              title="Drownlight Trailer"
+              class="w-full h-full"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+
+          <div class="relative w-[220px] h-[420px] shrink-0">
+            <iframe
+              src="https://www.kickstarter.com/projects/crytivogames/drownlight/widget/card.html?v=2"
+              title="Drownlight on Kickstarter"
+              class="w-full h-full rounded-lg overflow-hidden bg-white pointer-events-none"
+              frameborder="0" scrolling="no"></iframe>
+            <a href="https://www.kickstarter.com/projects/crytivogames/drownlight" target="_blank"
+              rel="noopener noreferrer" aria-label="View Drownlight on Kickstarter"
+              class="absolute inset-0 rounded-lg cursor-pointer"></a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -470,7 +520,8 @@ const onKeyGlobal = (e: KeyboardEvent) => {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <figure v-for="char in characters" :key="char.name"
             class="character-card relative overflow-hidden rounded-xl border border-white/10 bg-nav-dark/40"
-            :class="{ 'character-card--mystery': char.mystery, 'character-card--stylized': char.stylized }">
+            :class="{ 'character-card--mystery': char.mystery, 'character-card--stylized': char.stylized }"
+            @mousemove="onCardMove" @mouseleave="onCardLeave">
             <img :src="char.img" :alt="char.name"
               class="w-full h-96 md:h-[30rem] object-cover object-top transition-transform duration-300"
               loading="lazy" decoding="async" />
@@ -526,10 +577,10 @@ const onKeyGlobal = (e: KeyboardEvent) => {
 
           <div class="flex items-center gap-5 mt-4 text-sm text-white/90">
             <span class="flex items-center gap-2">
-              <span class="h-2.5 w-2.5 rounded-full bg-[#23a55a]"></span>235 Online
+              <span class="h-2.5 w-2.5 rounded-full bg-[#23a55a]"></span>{{ discordOnline.toLocaleString() }} Online
             </span>
             <span class="flex items-center gap-2">
-              <span class="h-2.5 w-2.5 rounded-full bg-white/40"></span>1,408 Members
+              <span class="h-2.5 w-2.5 rounded-full bg-white/40"></span>{{ discordMembers.toLocaleString() }} Members
             </span>
           </div>
 
@@ -936,17 +987,25 @@ nav {
 }
 
 .character-card {
+  --px: 0;
+  --py: 0;
   box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
-  transition: transform .25s ease, box-shadow .25s ease;
+  transform: perspective(900px) rotateY(calc(var(--px) * 9deg)) rotateX(calc(var(--py) * -9deg));
+  transition: transform .15s ease, box-shadow .25s ease;
+  will-change: transform;
 }
 
 .character-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, .5), 0 0 18px rgba(25, 195, 138, .25);
 }
 
+.character-card img {
+  transform: translate(calc(var(--px) * 12px), calc(var(--py) * 12px)) scale(1.04);
+  transition: transform .15s ease;
+}
+
 .character-card:hover img {
-  transform: scale(1.04);
+  transform: translate(calc(var(--px) * 12px), calc(var(--py) * 12px)) scale(1.08);
 }
 
 .character-veil {
@@ -962,12 +1021,12 @@ nav {
 
 /* Lily's art is more stylized — scale it down so she reads as set further back */
 .character-card--stylized img {
-  transform: translateY(50px) scale(.9);
+  transform: translate(calc(var(--px) * 12px), calc(50px + var(--py) * 12px)) scale(.88);
   transform-origin: center center;
 }
 
 .character-card--stylized:hover img {
-  transform: translateY(50px) scale(.94);
+  transform: translate(calc(var(--px) * 12px), calc(50px + var(--py) * 12px)) scale(.92);
 }
 
 .character-card--mystery:hover {
